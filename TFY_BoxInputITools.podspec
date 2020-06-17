@@ -21,7 +21,7 @@ Pod::Spec.new do |spec|
  
   spec.source       = { :git => "https://github.com/13662049573/TFY_BoxInputView.git", :tag => spec.version }
 
-  spec.source_files  = "TFY_BoxInputView/TFY_BoxInputITools/**/*.{h,m}","TFY_BoxInputView/TFY_BoxInputITools/TFY_BoxInputIToolsHeader.h"
+  spec.source_files  = "TFY_BoxInputView/TFY_BoxInputITools/**/*.{h,m}"
 
   spec.frameworks    = "Foundation","UIKit"
 

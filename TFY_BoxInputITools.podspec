@@ -3,7 +3,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "TFY_BoxInputITools"
 
-  spec.version      = "2.0.0"
+  spec.version      = "2.0.2"
 
   spec.summary      = "密码输入框"
 
@@ -17,7 +17,7 @@ Pod::Spec.new do |spec|
   
   spec.platform     = :ios, "10.0"
 
-  spec.author             = { "tfyzxc13662049573" => "420144542@qq.com" }
+  spec.author       = { "tfyzxc13662049573" => "420144542@qq.com" }
  
   spec.source       = { :git => "https://github.com/13662049573/TFY_BoxInputView.git", :tag => spec.version }
 

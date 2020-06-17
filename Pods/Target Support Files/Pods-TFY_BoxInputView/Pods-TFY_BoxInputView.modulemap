@@ -1,0 +1,6 @@
+framework module Pods_TFY_BoxInputView {
+  umbrella header "Pods-TFY_BoxInputView-umbrella.h"
+
+  export *
+  module * { export * }
+}

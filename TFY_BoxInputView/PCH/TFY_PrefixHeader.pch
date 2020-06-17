@@ -1,0 +1,25 @@
+//
+//  TFY_PrefixHeader.pch
+//  TFY_BoxInputView
+//
+//  Created by tiandengyou on 2020/6/16.
+//  Copyright © 2020 田风有. All rights reserved.
+//
+
+#ifndef TFY_PrefixHeader_pch
+#define TFY_PrefixHeader_pch
+
+#define TFY_BOX_UIColorFromHEX(rgbValue)    [UIColor colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+#define color_master TFY_BOX_UIColorFromHEX(0x313340)
+#define color_FFECEC TFY_BOX_UIColorFromHEX(0xFFECEC)
+
+#ifdef __OBJC__
+
+#import <TFY_AutoLayout.h>
+#import <TFY_CategoryHerder.h>
+
+#endif
+
+
+#endif /* TFY_PrefixHeader_pch */

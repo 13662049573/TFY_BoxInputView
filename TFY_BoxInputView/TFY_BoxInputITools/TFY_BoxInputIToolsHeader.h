@@ -9,7 +9,6 @@
 #ifndef TFY_BoxInputIToolsHeader_h
 #define TFY_BoxInputIToolsHeader_h
 
-#import "TFY_SecrectImageView.h"
 #import "TFY_LineView.h"
 #import "TFY_BoxInputView.h"
 

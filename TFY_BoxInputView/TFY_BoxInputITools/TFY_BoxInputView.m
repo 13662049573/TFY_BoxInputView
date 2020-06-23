@@ -93,7 +93,7 @@ typedef NS_ENUM(NSInteger, TFY_BoxTextChangeType) {
     _oldLength = 0;
     self.ifNeedSecurity = NO;
     self.securityDelay = 0.3;
-    self.codeLength = 4;
+    self.codeLength = 6;
     self.ifNeedCursor = YES;
     self.keyBoardType = UIKeyboardTypeNumberPad;
     self.inputType = TFY_InputType_Number;

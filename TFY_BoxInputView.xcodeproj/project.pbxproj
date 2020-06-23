@@ -54,7 +54,7 @@
 		568CDCC52499F2160027F428 /* TFY_BoxInputImage.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TFY_BoxInputImage.bundle; sourceTree = "<group>"; };
 		568CDCC62499F2160027F428 /* TFY_SecrectImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFY_SecrectImageView.h; sourceTree = "<group>"; };
 		568CDCC72499F2160027F428 /* TFY_SecrectImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFY_SecrectImageView.m; sourceTree = "<group>"; };
-		56B98001249892A100827508 /* TFY_BoxInputView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TFY_BoxInputView.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		56B98001249892A100827508 /* 输入框.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "输入框.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		56B9800E249892A100827508 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		56B98010249892A300827508 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		56B98013249892A300827508 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -145,7 +145,7 @@
 		56B98002249892A100827508 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				56B98001249892A100827508 /* TFY_BoxInputView.app */,
+				56B98001249892A100827508 /* 输入框.app */,
 				56B9801C249892A300827508 /* TFY_BoxInputViewTests.xctest */,
 				56B98027249892A300827508 /* TFY_BoxInputViewUITests.xctest */,
 			);
@@ -317,7 +317,7 @@
 			);
 			name = TFY_BoxInputView;
 			productName = TFY_BoxInputView;
-			productReference = 56B98001249892A100827508 /* TFY_BoxInputView.app */;
+			productReference = 56B98001249892A100827508 /* 输入框.app */;
 			productType = "com.apple.product-type.application";
 		};
 		56B9801B249892A300827508 /* TFY_BoxInputViewTests */ = {
@@ -731,7 +731,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.TFY.TFY-BoxInputView";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "输入框";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -752,7 +752,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.TFY.TFY-BoxInputView";
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "输入框";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

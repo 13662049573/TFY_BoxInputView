@@ -260,7 +260,7 @@ TFY_CATEGORY_STRONG_PROPERTY TFY_BoxInputView *boxInputView;
     TFY_BoxInputView *boxInputView = [[TFY_BoxInputView alloc] initWithCodeLength:6];
     boxInputView.mainCollectionView.contentInset = UIEdgeInsetsMake(0, 20, 0, 20);
     boxInputView.ifNeedCursor = NO;
-    boxInputView.placeholderText = @"露可娜娜";
+    boxInputView.placeholderText = @"爱我就来支持";
     boxInputView.customCellProperty = cellProperty;
     [boxInputView loadAndPrepareViewWithBeginEdit:YES];
     return boxInputView;
@@ -348,7 +348,6 @@ TFY_CATEGORY_STRONG_PROPERTY TFY_BoxInputView *boxInputView;
     TFY_BoxInputView *boxInputView = [[TFY_BoxInputView alloc] initWithCodeLength:6];
     boxInputView.mainCollectionView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
     boxInputView.ifNeedSecurity = YES;//need
-    boxInputView.boxFlowLayout.itemSize = CGSizeMake(52, 52);
     boxInputView.customCellProperty = cellProperty;
     [boxInputView loadAndPrepareViewWithBeginEdit:NO];
     
@@ -386,7 +385,6 @@ TFY_CATEGORY_STRONG_PROPERTY TFY_BoxInputView *boxInputView;
     TFY_BoxInputView *_boxInputView = [[TFY_BoxInputView alloc] initWithCodeLength:6];
     _boxInputView.mainCollectionView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
     _boxInputView.ifNeedSecurity = YES;//need
-    _boxInputView.boxFlowLayout.itemSize = CGSizeMake(52, 52);
     _boxInputView.customCellProperty = cellProperty;
     [_boxInputView loadAndPrepareViewWithBeginEdit:YES];
 
@@ -410,7 +408,6 @@ TFY_CATEGORY_STRONG_PROPERTY TFY_BoxInputView *boxInputView;
     TFY_BoxInputView *_boxInputView = [[TFY_BoxInputView alloc] initWithCodeLength:6];
     _boxInputView.mainCollectionView.contentInset = UIEdgeInsetsMake(0, 10, 0, 10);
     _boxInputView.ifNeedSecurity = YES;//need
-    _boxInputView.boxFlowLayout.itemSize = CGSizeMake(52, 52);
     _boxInputView.customCellProperty = cellProperty;
     [_boxInputView loadAndPrepareViewWithBeginEdit:YES];
 

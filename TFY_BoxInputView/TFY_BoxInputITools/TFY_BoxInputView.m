@@ -474,7 +474,7 @@ typedef NS_ENUM(NSInteger, TFY_BoxTextChangeType) {
 - (TFY_BoxFlowLayout *)boxFlowLayout{
     if (!_boxFlowLayout) {
         _boxFlowLayout = [TFY_BoxFlowLayout new];
-        _boxFlowLayout.itemSize = CGSizeMake(42, 47);
+        _boxFlowLayout.itemSize = CGSizeMake(40, 40);
     }
     return _boxFlowLayout;
 }

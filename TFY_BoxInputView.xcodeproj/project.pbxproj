@@ -51,6 +51,7 @@
 
 /* Begin PBXFileReference section */
 		029B84A330EACB781ACC5C93 /* Pods_TFY_BoxInputView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFY_BoxInputView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		36EE10F9250A0E8A00D24B3C /* TFY_BoxInputITools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TFY_BoxInputITools.h; sourceTree = "<group>"; };
 		568CDCC52499F2160027F428 /* TFY_BoxInputImage.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TFY_BoxInputImage.bundle; sourceTree = "<group>"; };
 		568CDCC62499F2160027F428 /* TFY_SecrectImageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TFY_SecrectImageView.h; sourceTree = "<group>"; };
 		568CDCC72499F2160027F428 /* TFY_SecrectImageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TFY_SecrectImageView.m; sourceTree = "<group>"; };
@@ -91,7 +92,6 @@
 		56B980662498B81E00827508 /* TFY_ListVCCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TFY_ListVCCell.m; sourceTree = "<group>"; };
 		56B980682498BE7600827508 /* DetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		56B980692498BE7600827508 /* DetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
-		56B9806B2498C09200827508 /* TFY_BoxInputIToolsHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TFY_BoxInputIToolsHeader.h; sourceTree = "<group>"; };
 		713C5E8923858DD519BF8F8F /* Pods_TFY_BoxInputViewTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TFY_BoxInputViewTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7A24A9E51F603358CFD1BE03 /* Pods-TFY_BoxInputView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFY_BoxInputView.debug.xcconfig"; path = "Target Support Files/Pods-TFY_BoxInputView/Pods-TFY_BoxInputView.debug.xcconfig"; sourceTree = "<group>"; };
 		8596BC0F8C2A6B608C00B800 /* Pods-TFY_BoxInputViewTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TFY_BoxInputViewTests.release.xcconfig"; path = "Target Support Files/Pods-TFY_BoxInputViewTests/Pods-TFY_BoxInputViewTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -250,7 +250,7 @@
 		56B980452498936100827508 /* TFY_BoxInputITools */ = {
 			isa = PBXGroup;
 			children = (
-				56B9806B2498C09200827508 /* TFY_BoxInputIToolsHeader.h */,
+				36EE10F9250A0E8A00D24B3C /* TFY_BoxInputITools.h */,
 				56B9805024989F8600827508 /* TFY_LineView.h */,
 				56B9805124989F8600827508 /* TFY_LineView.m */,
 				56B980532498A63600827508 /* TFY_BoxTextField.h */,

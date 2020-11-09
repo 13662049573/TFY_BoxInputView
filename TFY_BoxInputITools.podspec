@@ -3,7 +3,7 @@ Pod::Spec.new do |spec|
 
   spec.name         = "TFY_BoxInputITools"
 
-  spec.version      = "2.1.0"
+  spec.version      = "2.1.4"
 
   spec.summary      = "密码输入框"
 

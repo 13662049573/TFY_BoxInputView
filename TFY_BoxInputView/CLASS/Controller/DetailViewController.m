@@ -7,14 +7,14 @@
 //
 
 #import "DetailViewController.h"
-#import "TFY_BoxInputIToolsHeader.h"
+#import "TFY_BoxInputITools.h"
 
 @interface DetailViewController ()
-TFY_CATEGORY_STRONG_PROPERTY UIButton *backBtn,*addBtn,*removeBtn,*ifNeedSecurityBtn,*verifyBtn;
-TFY_CATEGORY_STRONG_PROPERTY UIImageView *bigLockImageView;
-TFY_CATEGORY_STRONG_PROPERTY UILabel *mainLabel,*subLabel,*descriptionLabel,*valueLabel;
-TFY_CATEGORY_STRONG_PROPERTY UIView *sepLineView;
-TFY_CATEGORY_STRONG_PROPERTY TFY_BoxInputView *boxInputView;
+TFY_PROPERTY_STRONG UIButton *backBtn,*addBtn,*removeBtn,*ifNeedSecurityBtn,*verifyBtn;
+TFY_PROPERTY_STRONG UIImageView *bigLockImageView;
+TFY_PROPERTY_STRONG UILabel *mainLabel,*subLabel,*descriptionLabel,*valueLabel;
+TFY_PROPERTY_STRONG UIView *sepLineView;
+TFY_PROPERTY_STRONG TFY_BoxInputView *boxInputView;
 
 @end
 
@@ -31,13 +31,13 @@ TFY_CATEGORY_STRONG_PROPERTY TFY_BoxInputView *boxInputView;
     self.navigationItem.leftBarButtonItem = item;
     
     [self.view addSubview:self.bigLockImageView];
-    self.bigLockImageView.tfy_RightSpace(0).tfy_TopSpace(TFY_kNavBarHeight).tfy_WidthAuto().tfy_HeightAuto();
+    self.bigLockImageView.tfy_RightSpace(0).tfy_TopSpace(TFY_kNavBarHeight()).tfy_WidthAuto().tfy_HeightAuto();
     
     [self.view addSubview:self.mainLabel];
-    self.mainLabel.tfy_LeftSpace(30).tfy_TopSpace(TFY_kNavBarHeight).tfy_RightSpace(30).tfy_Height(30);
+    self.mainLabel.tfy_LeftSpace(30).tfy_TopSpace(TFY_kNavBarHeight()).tfy_RightSpace(30).tfy_Height(30);
     
     [self.view addSubview:self.sepLineView];
-    self.sepLineView.tfy_LeftSpaceEqualView(self.mainLabel).tfy_TopSpaceToView(5, self.mainLabel).tfy_size(TFY_Width_W/2, 2);
+    self.sepLineView.tfy_LeftSpaceEqualView(self.mainLabel).tfy_TopSpaceToView(5, self.mainLabel).tfy_size(TFY_Width_W()/2, 2);
     
     [self.view addSubview:self.subLabel];
     self.subLabel.tfy_LeftSpaceEqualView(self.sepLineView).tfy_TopSpaceToView(0, self.sepLineView).tfy_RightSpaceEqualView(self.mainLabel).tfy_Height(30);

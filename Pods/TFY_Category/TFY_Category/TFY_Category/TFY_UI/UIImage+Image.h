@@ -210,5 +210,5 @@ typedef NS_ENUM(NSUInteger, TFY_GradientType) {
 /**
  *  拼接快照 imagesArr 快照的数组
  */
-+ (UIImage *)getImageFromImagesArray:(NSArray *)imagesArr;
++ (UIImage *)tfy_getImageFromImagesArray:(NSArray *)imagesArr;
 @end

@@ -1,20 +1,20 @@
 PODS:
-  - TFY_AutoLayout (2.6.0):
-    - TFY_AutoLayout/IOS_Layout (= 2.6.0)
-    - TFY_AutoLayout/MAC_Layout (= 2.6.0)
-    - TFY_AutoLayout/Util (= 2.6.0)
-  - TFY_AutoLayout/IOS_Layout (2.6.0):
+  - TFY_AutoLayout (2.6.4):
+    - TFY_AutoLayout/IOS_Layout (= 2.6.4)
+    - TFY_AutoLayout/MAC_Layout (= 2.6.4)
+    - TFY_AutoLayout/Util (= 2.6.4)
+  - TFY_AutoLayout/IOS_Layout (2.6.4):
     - TFY_AutoLayout/Util
-  - TFY_AutoLayout/MAC_Layout (2.6.0):
+  - TFY_AutoLayout/MAC_Layout (2.6.4):
     - TFY_AutoLayout/Util
-  - TFY_AutoLayout/Util (2.6.0)
-  - TFY_Category (3.4.0):
-    - TFY_Category/TFY_Foundation (= 3.4.0)
-    - TFY_Category/TFY_ITools (= 3.4.0)
-    - TFY_Category/TFY_UI (= 3.4.0)
-  - TFY_Category/TFY_Foundation (3.4.0)
-  - TFY_Category/TFY_ITools (3.4.0)
-  - TFY_Category/TFY_UI (3.4.0)
+  - TFY_AutoLayout/Util (2.6.4)
+  - TFY_Category (3.6.2):
+    - TFY_Category/TFY_Foundation (= 3.6.2)
+    - TFY_Category/TFY_ITools (= 3.6.2)
+    - TFY_Category/TFY_UI (= 3.6.2)
+  - TFY_Category/TFY_Foundation (3.6.2)
+  - TFY_Category/TFY_ITools (3.6.2)
+  - TFY_Category/TFY_UI (3.6.2)
 
 DEPENDENCIES:
   - TFY_AutoLayout
@@ -26,9 +26,9 @@ SPEC REPOS:
     - TFY_Category
 
 SPEC CHECKSUMS:
-  TFY_AutoLayout: ef69f4a2b3892931a80dc80421ecaa758e96a558
-  TFY_Category: d529c5981c30fb72031e431c40d923c0aae96b08
+  TFY_AutoLayout: 51019bdcdb78b9a145bd0ed351d23be93379dc0b
+  TFY_Category: 6c1e9f519eb2ce1049789168986eba8ee751fe20
 
 PODFILE CHECKSUM: b86321660d9d0b0fdee1fe5f1908216c9095491c
 
-COCOAPODS: 1.9.3
+COCOAPODS: 1.10.0

@@ -17,7 +17,7 @@
 #ifdef __OBJC__
 
 #import <TFY_AutoLayout.h>
-#import <TFY_CategoryHerder.h>
+#import <TFY_Category.h>
 
 #endif
 

@@ -1,18 +1,19 @@
 //
-//  TFY_CommonUtils.m
-//  TFY_AutoLayoutModelTools
+//  Utils.m
+//  LayoutCategoryUtil
 //
-//  Created by 田风有 on 2019/5/10.
-//  Copyright © 2019 恋机科技. All rights reserved.
+//  Created by 田风有 on 2020/9/4.
+//  Copyright © 2020 田风有. All rights reserved.
 //
 
-#import "TFY_CommonUtils.h"
+#import "TFY_Utils.h"
 #import <UIKit/UIKit.h>
 #import <objc/runtime.h>
 
 #pragma 获取网络系统库头文件
 #import <SystemConfiguration/CaptiveNetwork.h>
 #import <SystemConfiguration/SystemConfiguration.h>
+#import <CoreTelephony/CTCarrier.h>
 #import <CoreTelephony/CTTelephonyNetworkInfo.h>
 #pragma 手机授权需求系统库头文件
 #import <Photos/Photos.h>
@@ -37,7 +38,7 @@
 #define IOS_10_OR_LATER    ([[[UIDevice currentDevice] systemVersion] floatValue] >= 10.0)
 
 
-#pragma *******************************************判断获取网络数据****************************************
+#pragma mark*******************************************判断获取网络数据****************************************
 
 NSString *kReachabilityChangedNotification = @"kNetworkReachabilityChangedNotification";
 
@@ -66,13 +67,13 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 {
 #pragma unused (target, flags)
     NSCAssert(info != NULL, @"info was NULL in ReachabilityCallback");
-    NSCAssert([(__bridge NSObject*) info isKindOfClass: [TFY_CommonUtils class]], @"info was wrong class in ReachabilityCallback");
+    NSCAssert([(__bridge NSObject*) info isKindOfClass: [TFY_Utils class]], @"info was wrong class in ReachabilityCallback");
     
-    TFY_CommonUtils* noteObject = (__bridge TFY_CommonUtils *)info;
+    TFY_Utils* noteObject = (__bridge TFY_Utils *)info;
     [[NSNotificationCenter defaultCenter] postNotificationName: kReachabilityChangedNotification object: noteObject];
 }
 
-@interface TFY_CommonUtils ()
+@interface TFY_Utils ()
 #pragma 获取网络需求
 @property(nonatomic , assign)SCNetworkReachabilityRef reachabilityRef;
 @property (strong, nonatomic) dispatch_source_t timer;
@@ -84,8 +85,8 @@ static void ReachabilityCallback(SCNetworkReachabilityRef target, SCNetworkReach
 @end
 
 
-@implementation TFY_CommonUtils
-static TFY_CommonUtils *_instance; //单例数据需求
+@implementation TFY_Utils
+static TFY_Utils *_instance; //单例数据需求
 const char* jailbreak_tool_pathes[] = {
     "/Applications/Cydia.app",
     "/Library/MobileSubstrate/MobileSubstrate.dylib",
@@ -94,7 +95,7 @@ const char* jailbreak_tool_pathes[] = {
     "/etc/apt"
 };
 
-#pragma ------------------------------------------gcd定时器方法---------------------------------------
+#pragma mark------------------------------------------gcd定时器方法---------------------------------------
 
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(BOOL)repeats queue:(dispatch_queue_t)queue block:(void (^)(void))block {
     self = [super init];
@@ -146,10 +147,10 @@ const char* jailbreak_tool_pathes[] = {
 }
 
 
-#pragma ------------------------------------------手机获取网络监听方法---------------------------------------
+#pragma mark------------------------------------------手机获取网络监听方法---------------------------------------
 
 + (instancetype)reachabilityWithHostName:(NSString *)hostName{
-    TFY_CommonUtils* returnValue = NULL;
+    TFY_Utils* returnValue = NULL;
     SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithName(NULL, [hostName UTF8String]);
     if (reachability != NULL)
     {
@@ -169,7 +170,7 @@ const char* jailbreak_tool_pathes[] = {
 + (instancetype)reachabilityWithAddress:(const struct sockaddr *)hostAddress{
     SCNetworkReachabilityRef reachability = SCNetworkReachabilityCreateWithAddress(kCFAllocatorDefault, hostAddress);
     
-    TFY_CommonUtils* returnValue = NULL;
+    TFY_Utils* returnValue = NULL;
     
     if (reachability != NULL)
     {
@@ -213,17 +214,17 @@ const char* jailbreak_tool_pathes[] = {
 }
 #pragma mark - Network Flag Handling
 
-- (TFY_NetworkStatus)networkStatusForFlags:(SCNetworkReachabilityFlags)flags{
+- (NetworkStatus)networkStatusForFlags:(SCNetworkReachabilityFlags)flags{
     PrintReachabilityFlags(flags, "networkStatusForFlags");
     if ((flags & kSCNetworkReachabilityFlagsReachable) == 0)
     {
-        return TFY_NotReachable;
+        return NotReachable;
     }
-    TFY_NetworkStatus returnValue = TFY_NotReachable;
+    NetworkStatus returnValue = NotReachable;
     
     if ((flags & kSCNetworkReachabilityFlagsConnectionRequired) == 0)
     {
-        returnValue = TFY_ReachableViaWiFi;
+        returnValue = ReachableViaWiFi;
     }
     if ((((flags & kSCNetworkReachabilityFlagsConnectionOnDemand ) != 0) ||
          (flags & kSCNetworkReachabilityFlagsConnectionOnTraffic) != 0))
@@ -231,11 +232,11 @@ const char* jailbreak_tool_pathes[] = {
         
         if ((flags & kSCNetworkReachabilityFlagsInterventionRequired) == 0)
         {
-            returnValue = TFY_ReachableViaWiFi;
+            returnValue = ReachableViaWiFi;
         }
     }
     if ((flags & kSCNetworkReachabilityFlagsIsWWAN) == kSCNetworkReachabilityFlagsIsWWAN){
-        returnValue = TFY_ReachableViaWWAN;
+        returnValue = ReachableViaWWAN;
     }
     return returnValue;
 }
@@ -250,9 +251,9 @@ const char* jailbreak_tool_pathes[] = {
     return NO;
 }
 
-- (TFY_NetworkStatus)currentReachabilityStatus{
+- (NetworkStatus)currentReachabilityStatus{
     NSAssert(_reachabilityRef != NULL, @"currentNetworkStatus called with NULL SCNetworkReachabilityRef");
-    TFY_NetworkStatus returnValue = TFY_NotReachable;
+    NetworkStatus returnValue = NotReachable;
     SCNetworkReachabilityFlags flags;
     
     if (SCNetworkReachabilityGetFlags(_reachabilityRef, &flags)){
@@ -266,17 +267,17 @@ const char* jailbreak_tool_pathes[] = {
  */
 +(NSString *)getNetconnType{
     NSString *netcomType = @"";
-    TFY_CommonUtils *reach = [TFY_CommonUtils reachabilityWithHostName:@"www.apple.com"];
+    TFY_Utils *reach = [TFY_Utils reachabilityWithHostName:@"www.apple.com"];
     switch ([reach currentReachabilityStatus]) {
-        case TFY_NotReachable:{
+        case NotReachable:{
             netcomType = @"network";
         }
         break;
-        case TFY_ReachableViaWiFi:{
+        case ReachableViaWiFi:{
             netcomType = @"Wifi";
         }
         break;
-        case TFY_ReachableViaWWAN:{
+        case ReachableViaWWAN:{
             netcomType = [self getNetType];
         }
         break;
@@ -286,22 +287,89 @@ const char* jailbreak_tool_pathes[] = {
 
 //针对蜂窝网络判断是3G或者4G
 +(NSString *)getNetType{
-    NSString *netconnType = nil;
-    CTTelephonyNetworkInfo *info = [[CTTelephonyNetworkInfo alloc] init];
-    NSString *currentStatus = info.currentRadioAccessTechnology;
-    if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyGPRS"]) {netconnType = @"GPRS";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyEdge"]) {netconnType = @"2.75G EDGE";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyWCDMA"]){netconnType = @"3G";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyHSDPA"]){netconnType = @"3.5G HSDPA";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyHSUPA"]){netconnType = @"3.5G HSUPA";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyCDMA1x"]){netconnType = @"2G";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyCDMAEVDORev0"]){netconnType = @"3G";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyCDMAEVDORevA"]){netconnType = @"3G";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyCDMAEVDORevB"]){netconnType = @"3G";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyeHRPD"]){netconnType = @"HRPD";}
-    else if ([currentStatus isEqualToString:@"CTRadioAccessTechnologyLTE"]){netconnType = @"4G";}
+    __block NSString *netconnType = nil;
+    NSArray *typeStrings2G = @[CTRadioAccessTechnologyEdge,
+            CTRadioAccessTechnologyGPRS,
+            CTRadioAccessTechnologyCDMA1x];
+      
+     NSArray *typeStrings3G = @[CTRadioAccessTechnologyHSDPA,
+            CTRadioAccessTechnologyWCDMA,
+            CTRadioAccessTechnologyHSUPA,
+            CTRadioAccessTechnologyCDMAEVDORev0,
+            CTRadioAccessTechnologyCDMAEVDORevA,
+            CTRadioAccessTechnologyCDMAEVDORevB,
+            CTRadioAccessTechnologyeHRPD];
+      
+     NSArray *typeStrings4G = @[CTRadioAccessTechnologyLTE];
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        CTTelephonyNetworkInfo *teleInfo= [[CTTelephonyNetworkInfo alloc] init];
+        if (@available(iOS 12.0, *)) {
+            NSDictionary<NSString *, NSString *> *currentStatus = teleInfo.serviceCurrentRadioAccessTechnology;
+            if (currentStatus.allKeys.count==0) {
+                netconnType = @"未知";
+            }
+            [currentStatus enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, NSString * _Nonnull obj, BOOL * _Nonnull stop) {
+                if ([typeStrings4G containsObject:obj]) {
+                    netconnType = @"4G";
+                } else if ([typeStrings3G containsObject:obj]) {
+                    netconnType = @"3G";
+                } else if ([typeStrings2G containsObject:obj]) {
+                    netconnType = @"2G";
+                } else {
+                    netconnType = @"未知";
+                }
+            }];
+        }
+    }
+    else {
+       netconnType = @"未知";
+    }
     return netconnType;
 }
+/**是否开插sim卡*/
++ (BOOL)simCardInseerted {
+    CTTelephonyNetworkInfo *netIInfo = [[CTTelephonyNetworkInfo alloc] init];
+    __block BOOL result = NO;
+    if (@available(iOS 12.0, *)) {
+        NSDictionary<NSString *, CTCarrier *>*currentStatus = netIInfo.serviceSubscriberCellularProviders;
+        [currentStatus enumerateKeysAndObjectsUsingBlock:^(NSString * _Nonnull key, CTCarrier * _Nonnull obj, BOOL * _Nonnull stop) {
+            if (obj.isoCountryCode.length) {
+                *stop = YES;
+                result = YES;
+            }
+        }];
+    }
+    return result;
+}
+
+// 获取运营商类型
++ (SSOperatorsType)getOperatorsType{
+    CTTelephonyNetworkInfo *telephonyInfo = [[CTTelephonyNetworkInfo alloc] init];
+    if (@available(iOS 12.0, *)) {
+        NSDictionary *dic = telephonyInfo.serviceSubscriberCellularProviders;
+        if (dic.count == 2) {
+            //双卡
+            UIApplication *app = [UIApplication sharedApplication];
+            id statusBar = [app valueForKeyPath:@"statusBar"];
+            
+            if ([statusBar isKindOfClass:NSClassFromString(@"UIStatusBar_Modern")]) {
+                id curData = [statusBar valueForKeyPath:@"statusBar.currentData.cellularEntry.string"];
+                if ([curData isEqualToString:@"中国电信"]) {
+                    return SSOperatorsTypeTelecom;
+                }else if ([curData isEqualToString:@"中国联通"]){
+                    return SSOperatorsTypeChinaUnicom;
+                }else if ([curData isEqualToString:@"中国移动"]){
+                    return SSOperatorsTypeChinaMobile;
+                }
+            }else{
+                return SSOperatorsTypeUnknown;
+            }
+        }
+    }
+    return SSOperatorsTypeUnknown;
+}
+
 
 +(NSString *)getDeviceIDFV{
     NSString* idfvStr      = [[UIDevice currentDevice] identifierForVendor].UUIDString;
@@ -362,7 +430,7 @@ const char* jailbreak_tool_pathes[] = {
     return (__bridge NSString *)(uuidStr);
 }
 
-#pragma ---------------------------------------手机权限授权方法开始---------------------------------------
+#pragma mark---------------------------------------手机权限授权方法开始---------------------------------------
 /*
  * 单例
  */
@@ -375,11 +443,11 @@ const char* jailbreak_tool_pathes[] = {
 }
 
 +(id)allocWithZone:(struct _NSZone *)zone{
-    return [TFY_CommonUtils shareInstance] ;
+    return [TFY_Utils shareInstance] ;
 }
 
 -(id)copyWithZone:(struct _NSZone *)zone{
-    return [TFY_CommonUtils shareInstance] ;
+    return [TFY_Utils shareInstance] ;
 }
 
 /*
@@ -401,7 +469,7 @@ const char* jailbreak_tool_pathes[] = {
         }
     }];
     [alert addAction:okAction];
-    [[TFY_CommonUtils getCurrentVC] presentViewController:alert animated:YES completion:nil];
+    [[TFY_Utils getCurrentVC] presentViewController:alert animated:YES completion:nil];
 }
 
 //获取当前VC
@@ -474,15 +542,15 @@ const char* jailbreak_tool_pathes[] = {
 /**
  * 温度单位转换方法
  */
-+(CGFloat)temperatureUnitExchangeValue:(CGFloat)value changeTo:(TFY_Temperature)unit{
-    if (unit == TFY_Fahrenheit) {
++(CGFloat)temperatureUnitExchangeValue:(CGFloat)value changeTo:(Temperature)unit{
+    if (unit == Fahrenheit) {
         return 32 + 1.8 * value; //华氏度
     }else {
         return (value - 32) / 1.8; //摄氏度
     }
 }
 
-#pragma ------------------------------------------各种方法使用------------------------------------------
+#pragma mark------------------------------------------各种方法使用------------------------------------------
 
 - (void)initLanguage{
     NSString *language=[self currentLanguage];
@@ -515,21 +583,26 @@ const char* jailbreak_tool_pathes[] = {
     [self setLanguage:languageCode];
 }
 
-#pragma ------------------------------------------国际化设置---------------------------------------
+- (UIWindow*)lastWindow {
+    NSEnumerator  *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
+    for (UIWindow *window in frontToBackWindows) {
+        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
 
+        BOOL windowIsVisible = !window.hidden&& window.alpha>0;
 
-/**
- *  NSDictionary或NSArray转换为NSString
- */
-+(NSString *)toJSONString:(id)theData{
-    NSError *error = nil;
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:theData options:NSJSONWritingPrettyPrinted error:&error];
-    if ([jsonData length] > 0 && error == nil){
-        NSString *jsonStr_ = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
-        return jsonStr_;
+        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal && window.windowLevel <= UIWindowLevelNormal);
+
+        BOOL windowKeyWindow = window.isKeyWindow;
+        
+        if (windowOnMainScreen && windowIsVisible && windowLevelSupported && windowKeyWindow) {
+            return window;
+        }
     }
-    else{return nil;}
+    return [UIApplication sharedApplication].keyWindow;
 }
+
+#pragma mark------------------------------------------国际化设置---------------------------------------
+
 //formart时间戳格式("yyyy-MM-dd HH-mm-ss")
 +(NSString *)dateStringWithDate:(NSDate *)date formart:(NSString *)formart
 {
@@ -701,6 +774,7 @@ const char* jailbreak_tool_pathes[] = {
     
     return [NSString stringWithFormat:@"%@://%@%@?%@", [parsedURL scheme], [parsedURL host], [parsedURL path], [paramsString stringByAddingPercentEncodingWithAllowedCharacters:[NSCharacterSet URLFragmentAllowedCharacterSet]]];
 }
+
 +(NSDictionary *)parseQueryString:(NSString *)query
 {
     NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithCapacity:6];
@@ -1322,7 +1396,7 @@ const char* jailbreak_tool_pathes[] = {
  *  iOS 隐藏手机号码中间的四位数字
  */
 +(NSString *)numberSuitScanf:(NSString*)number{
-    BOOL isOk = [TFY_CommonUtils mobilePhoneNumber:number];;
+    BOOL isOk = [TFY_Utils mobilePhoneNumber:number];;
     if (isOk) {//如果是手机号码的话
         NSString *numberString = [number stringByReplacingCharactersInRange:NSMakeRange(3, 4) withString:@"****"];
         return numberString;
@@ -2277,7 +2351,7 @@ const char* jailbreak_tool_pathes[] = {
     // 65-90 A-Z  97-122 a-z
     while (index < length) {
         int asciiCode = [string characterAtIndex:index];
-        NSLog(@"%d,%lu",asciiCode,substrLength);
+        NSLog(@"%d,%lu",asciiCode,(unsigned long)substrLength);
         if(!(asciiCode >= 65 && asciiCode <= 90) && !(asciiCode >= 97 && asciiCode <= 122) ){
             if(index >= length - 1){
                 return  NO;
@@ -2504,44 +2578,6 @@ const char* jailbreak_tool_pathes[] = {
     freeifaddrs(interfaces);
     return address;
 }
-/**
- *  拼接http://或者https://
- */
-+ (NSString *)getCompleteWebsite:(NSString *)urlStr{
-    NSString *returnUrlStr = nil;
-    NSString *scheme = nil;
-    
-    assert(urlStr != nil);
-    
-    urlStr = [urlStr stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-    if ( (urlStr != nil) && (urlStr.length != 0) ) {
-        NSRange  urlRange = [urlStr rangeOfString:@"://"];
-        if (urlRange.location == NSNotFound) {
-            returnUrlStr = [NSString stringWithFormat:@"http://%@", urlStr];
-        } else {
-            scheme = [urlStr substringWithRange:NSMakeRange(0, urlRange.location)];
-            assert(scheme != nil);
-            
-            if ( ([scheme compare:@"http"  options:NSCaseInsensitiveSearch] == NSOrderedSame)
-                || ([scheme compare:@"https" options:NSCaseInsensitiveSearch] == NSOrderedSame) ) {
-                returnUrlStr = urlStr;
-            } else {
-                //不支持的URL方案
-            }
-        }
-    }
-    return returnUrlStr;
-}
-
-+ (NSString *)getStringWithRange:(NSRange)range
-{
-    NSMutableString *string = [NSMutableString string];
-    for (int i = 0; i < range.length ; i++) {
-        [string appendString:@" "];
-    }
-    return string;
-}
-
 
 /**
  *  存储当前BOOL
@@ -2741,9 +2777,16 @@ static CGRect oldframe;
  *  反归档
  */
 +(NSArray *)keyedUnArchiverForKey:(NSString *)key FromFile:(NSString *)path{
+    NSError *error=nil;
     NSData *data=[NSData dataWithContentsOfFile:path];
-    NSKeyedUnarchiver *unArch=[[NSKeyedUnarchiver alloc]initForReadingWithData:data];
-    NSArray *arr = [unArch decodeObjectForKey:key];
+    NSArray *arr;
+    if (@available(iOS 11.0, *)) {
+        NSKeyedUnarchiver *unArch=[[NSKeyedUnarchiver alloc] initForReadingFromData:data error:&error];
+        arr = [unArch decodeObjectForKey:key];
+    } else {
+        NSKeyedUnarchiver *unArch=[[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+        arr = [unArch decodeObjectForKey:key];
+    }
     return arr;
 }
 
@@ -3088,30 +3131,7 @@ static CGRect oldframe;
     
     return array;
 }
-/**
- *  新建UICollectionViewFlowLayout容器
- */
-+(UICollectionViewFlowLayout *)setUICollectionViewFlowLayoutWidths:(float)width High:(float)high minHspacing:(float)minhs minVspacing:(float)minvs UiedgeUp:(float)up Uiedgeleft:(float)left Uiedgebottom:(float)bottom Uiedgeright:(float)right Scdirection:(BOOL) direction{
-    UICollectionViewFlowLayout *flow = [UICollectionViewFlowLayout new];
-    
-    flow = [UICollectionViewFlowLayout new];
-    //格子的大小 (长，高)
-    flow.itemSize = CGSizeMake(width, high);
-    //横向最小距离
-    flow.minimumInteritemSpacing = minhs;
-    //代表的是纵向的空间间隔
-    flow.minimumLineSpacing=minvs;
-    //设置，上／左／下／右 边距 空间间隔数是多少
-    flow.sectionInset = UIEdgeInsetsMake(up, left, bottom, right);
-    
-    //确定是水平滚动，还是垂直滚动
-    if (direction) {
-        [flow setScrollDirection:UICollectionViewScrollDirectionVertical];
-    }else{
-        [flow setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-    }
-    return flow;
-}
+
 /**
  *  获取某个view在屏幕上的frame
  */
@@ -3250,6 +3270,7 @@ static const char _bundle = 0;
 }
 
 @end
+
 @implementation NSBundle (Utils_Chain)
 
 + (void)setLanguage:(NSString *)language {
@@ -3259,4 +3280,5 @@ static const char _bundle = 0;
     });
     objc_setAssociatedObject([NSBundle mainBundle], &_bundle, language ? [NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:language ofType:@"lproj"]] : nil, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
+
 @end

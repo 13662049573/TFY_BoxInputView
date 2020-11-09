@@ -1,12 +1,12 @@
 //
-//  ScenePackage.m
+//  TFY_Scene.m
 //  TFY_Category
 //
-//  Created by tiandengyou on 2020/3/27.
+//  Created by 田风有 on 2020/9/7.
 //  Copyright © 2020 恋机科技. All rights reserved.
 //
 
-#import "ScenePackage.h"
+#import "TFY_Scene.h"
 #import <objc/message.h>
 
 typedef enum : NSUInteger {
@@ -16,8 +16,7 @@ typedef enum : NSUInteger {
     ScenePackageSceneHookStatusDone
 } ScenePackageSceneHookStatus;
 
-@interface ScenePackage ()
-
+@interface TFY_Scene ()
 @property (nonatomic, assign) BOOL isSceneApp;
 
 @property (nonatomic, assign) BOOL isLoadFirstWindow;
@@ -33,16 +32,15 @@ typedef enum : NSUInteger {
 @property (nonatomic, assign) ScenePackageSceneHookStatus hookSceneStatus;
 
 @property (nonatomic, weak) UIWindow *currentClickWindow;
-
 @end
 
-@implementation ScenePackage
+@implementation TFY_Scene
 
 + (instancetype)defaultPackage{
-    static ScenePackage *package = nil;
+    static TFY_Scene *package = nil;
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        package = [ScenePackage new];
+        package = [TFY_Scene new];
     });
     return package;
 }
@@ -159,6 +157,23 @@ typedef enum : NSUInteger {
 }
 
 
+- (UIWindow*)lastWindow {
+    NSEnumerator  *frontToBackWindows = [UIApplication.sharedApplication.windows reverseObjectEnumerator];
+    for (UIWindow *window in frontToBackWindows) {
+        BOOL windowOnMainScreen = window.screen == UIScreen.mainScreen;
+
+        BOOL windowIsVisible = !window.hidden&& window.alpha>0;
+
+        BOOL windowLevelSupported = (window.windowLevel >= UIWindowLevelNormal && window.windowLevel <= UIWindowLevelNormal);
+
+        BOOL windowKeyWindow = window.isKeyWindow;
+        
+        if (windowOnMainScreen && windowIsVisible && windowLevelSupported && windowKeyWindow) {
+            return window;
+        }
+    }
+    return [UIApplication sharedApplication].keyWindow;
+}
 
 - (void)showWindow:(UIWindow *)window{
     if (self.currentScene) {
@@ -260,7 +275,7 @@ typedef enum : NSUInteger {
     }else{
         if (!_isLoadFirstWindow && isLoadFirstWindow) {
             @synchronized (self.events) {
-                for (void (^ block)(ScenePackage * _Nonnull) in self.events) {
+                for (void (^ block)(TFY_Scene * _Nonnull) in self.events) {
                     block(self);
                 }
                 [self.events removeAllObjects];
@@ -270,7 +285,7 @@ typedef enum : NSUInteger {
     }
 }
 
-- (void)addBeforeWindowEvent:(void (^)(ScenePackage * _Nonnull))event{
+- (void)addBeforeWindowEvent:(void (^)(TFY_Scene * _Nonnull))event{
     if (_isLoadFirstWindow) {
         event(self);
     }else{
@@ -289,7 +304,7 @@ typedef enum : NSUInteger {
     id newImpBlock = ^ (__unsafe_unretained id object,CGPoint obj1,id obj2){
         UIView * obj;
         if ((IMP)oldImp != _objc_msgForward) {
-            [[ScenePackage defaultPackage] clickUpdateWindow:object];
+            [[TFY_Scene defaultPackage] clickUpdateWindow:object];
             if (oldImp == NULL) {
                 struct objc_super supperInfo = {
                     .receiver = object,
@@ -324,7 +339,7 @@ typedef enum : NSUInteger {
             }else{
                 obj = oldImp(object,swizzleSelector,obj1,obj2);
             }
-            [[ScenePackage defaultPackage] setScene:obj];
+            [[TFY_Scene defaultPackage] setScene:obj];
         }
         return obj;
         
@@ -352,7 +367,7 @@ typedef enum : NSUInteger {
     __block void (* oldImp) (__unsafe_unretained id, SEL,id) = NULL;
     id newImpBlock = ^ (__unsafe_unretained id object, id obj1){
         if ((IMP)oldImp != _objc_msgForward) {
-            [[ScenePackage defaultPackage] setSceneDelegate:obj1];
+            [[TFY_Scene defaultPackage] setSceneDelegate:obj1];
             if (oldImp == NULL) {
                 struct objc_super supperInfo = {
                     .receiver = object,
@@ -405,7 +420,7 @@ typedef enum : NSUInteger {
                 oldImp(object,swizzleSelector,obj1,obj2,obj3);
             }
         }
-        [[ScenePackage defaultPackage] setIsLoadFirstWindow:YES];
+        [[TFY_Scene defaultPackage] setIsLoadFirstWindow:YES];
     };
     
     oldImp = (__typeof__ (oldImp))[self methodImpSet:newImpBlock class:swizzleClass selector:swizzleSelector];
@@ -443,7 +458,7 @@ typedef enum : NSUInteger {
     if (!swizzleSelector) return;
     __block void (* oldImp) (__unsafe_unretained id, SEL,id) = NULL;
     id newImpBlock = ^ (__unsafe_unretained id object, id obj1){
-        [[ScenePackage defaultPackage] _checkApplicationIsSceneApp:obj1];
+        [[TFY_Scene defaultPackage] _checkApplicationIsSceneApp:obj1];
         if ((IMP)oldImp != _objc_msgForward) {
             if (oldImp == NULL) {
                 struct objc_super supperInfo = {
@@ -470,8 +485,8 @@ typedef enum : NSUInteger {
 __attribute__((constructor)) static void ScenePackageExcImp(){
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
-        [[ScenePackage defaultPackage] methodSwizzledScene];
-        [[ScenePackage defaultPackage] methodSwizzledApplication];
+        [[TFY_Scene defaultPackage] methodSwizzledScene];
+        [[TFY_Scene defaultPackage] methodSwizzledApplication];
     });
 }
 
@@ -522,7 +537,7 @@ static void * kScenePackageReturnNavigationControllerKey = &kScenePackageReturnN
     BOOL dismissAnimated = [self __AssociatedViewControllerboolValue:kScenePackageShowDismissKey default:showStyle == ControllerShowStylePush];
     NSTimeInterval time = [objc_getAssociatedObject(self, kScenePackageShowDismissTimeKey) doubleValue];
     UIWindow *currentWindow = ({
-        NSArray *windows = [ScenePackage defaultPackage].windows;
+        NSArray *windows = [TFY_Scene defaultPackage].windows;
         UIWindow *highWindow = windows.firstObject;
         for (UIWindow * window  in windows) {
             if (window.windowLevel > highWindow.windowLevel) {
@@ -532,9 +547,9 @@ static void * kScenePackageReturnNavigationControllerKey = &kScenePackageReturnN
         highWindow;
     });
     [currentWindow endEditing:YES];
-    UIWindow *window = [[UIWindow alloc] initWithFrame:[ScenePackage defaultPackage].window.frame];
+    UIWindow *window = [[UIWindow alloc] initWithFrame:[TFY_Scene defaultPackage].window.frame];
     window.windowLevel = currentWindow.windowLevel+1;
-    [[ScenePackage defaultPackage] showWindow:window];
+    [[TFY_Scene defaultPackage] showWindow:window];
     ScenePackageRootViewController *root = [[ScenePackageRootViewController alloc] init];
     [root._once(YES) addViewDidLoadBlock:^(UIViewController * _Nonnull vc) {
         if (vc.navigationController) {
@@ -554,7 +569,7 @@ static void * kScenePackageReturnNavigationControllerKey = &kScenePackageReturnN
     [window makeKeyWindow];
     window.backgroundColor = [UIColor clearColor];
     
-    [[ScenePackage defaultPackage].alertWindows addObject:window];
+    [[TFY_Scene defaultPackage].alertWindows addObject:window];
     if (showStyle == ControllerShowStylePush) {
         id isBarHidden = objc_getAssociatedObject(self, kScenePackageShowNavigationBarKey);
         BOOL defaultNavigationBarHidden = YES;
@@ -603,7 +618,7 @@ static void * kScenePackageReturnNavigationControllerKey = &kScenePackageReturnN
         __strong typeof(weakWindow) strongWindow = weakWindow;
         if (!strongWindow) return;
         [strongWindow resignKeyWindow];
-        [[ScenePackage defaultPackage].alertWindows removeObject:strongWindow];
+        [[TFY_Scene defaultPackage].alertWindows removeObject:strongWindow];
         [strongWindow removeFromSuperview];
         strongWindow.hidden = YES;
     }];
@@ -611,7 +626,7 @@ static void * kScenePackageReturnNavigationControllerKey = &kScenePackageReturnN
 
 - (void)___showInRootController{
     
-    UIViewController *viewController = ([ScenePackage defaultPackage].keyWindow?:[ScenePackage defaultPackage].window).rootViewController;
+    UIViewController *viewController = ([TFY_Scene defaultPackage].keyWindow?:[TFY_Scene defaultPackage].window).rootViewController;
     UIViewController *vc = [self __getTopViewController:viewController];
     if (vc) {
         NSInteger showStyle = [objc_getAssociatedObject(self, kScenePackageShowStyleKey) integerValue];

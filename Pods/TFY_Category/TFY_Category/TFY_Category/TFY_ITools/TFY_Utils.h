@@ -1,10 +1,10 @@
 //
-//  TFY_CommonUtils.h
-//  TFY_AutoLayoutModelTools
+//  Utils.h
+//  LayoutCategoryUtil
 //
-//  Created by 田风有 on 2019/5/10.
-//  Copyright © 2019 恋机科技. All rights reserved.
-//  版本 2.5.0
+//  Created by 田风有 on 2020/9/4.
+//  Copyright © 2020 田风有. All rights reserved.
+//
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
@@ -12,32 +12,40 @@
 
 static NSString * _Nonnull const AppLanguage = @"appLanguage";
 
-#define TFY_Localized(key, comment)  [[NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:AppLanguage]] ofType:@"lproj"]] localizedStringForKey:(key) value:@"" table:comment]
+#define Localized(key, comment)  [[NSBundle bundleWithPath:[[NSBundle mainBundle] pathForResource:[NSString stringWithFormat:@"%@",[[NSUserDefaults standardUserDefaults] objectForKey:AppLanguage]] ofType:@"lproj"]] localizedStringForKey:(key) value:@"" table:comment]
 
 NS_ASSUME_NONNULL_BEGIN
 
-#pragma *******************************************判断获取网络数据****************************************
+#pragma mark*******************************************判断获取网络数据****************************************
 
 typedef enum : NSInteger {
-    TFY_NotReachable = 0,
-    TFY_ReachableViaWiFi,
-    TFY_ReachableViaWWAN
-} TFY_NetworkStatus;
+    NotReachable = 0,
+    ReachableViaWiFi,
+    ReachableViaWWAN
+} NetworkStatus;
+
+typedef enum : NSUInteger {
+    SSOperatorsTypeChinaTietong,//中国铁通
+    SSOperatorsTypeTelecom,//中国电信
+    SSOperatorsTypeChinaUnicom,//中国联通
+    SSOperatorsTypeChinaMobile,//中国移动
+    SSOperatorsTypeUnknown,//未知
+} SSOperatorsType;
+
 
 extern NSString *kReachabilityChangedNotification;
 
-#pragma ****************************************手机权限授权方法开始****************************************
+#pragma mark****************************************手机权限授权方法开始****************************************
 
 typedef enum : NSInteger {
-    TFY_Celsius = 0,
-    TFY_Fahrenheit,
-} TFY_Temperature;
+    Celsius = 0,
+    Fahrenheit,
+} Temperature;
 
+@interface TFY_Utils : NSObject
+#pragma mark------------------------------------------gcd定时器方法---------------------------------------
 
-@interface TFY_CommonUtils : NSObject
-
-#pragma ------------------------------------------gcd定时器方法---------------------------------------
-/***初始化计时器*/
+/**初始化计时器*/
 - (instancetype)initWithInterval:(NSTimeInterval)interval repeats:(BOOL)repeats queue:(dispatch_queue_t)queue block:(void (^)(void))block;
 
 /**启动*/
@@ -51,7 +59,7 @@ typedef enum : NSInteger {
 /**销毁*/
 - (void)cancel;
 
-#pragma ------------------------------------------手机获取网络监听方法---------------------------------------
+#pragma mark------------------------------------------手机获取网络监听方法---------------------------------------
 /** v用于检查给定主机名的可访问性。*/
 + (instancetype)reachabilityWithHostName:(NSString *)hostName;
 
@@ -65,23 +73,23 @@ typedef enum : NSInteger {
 - (BOOL)startNotifier;
 - (void)stopNotifier;
 
-- (TFY_NetworkStatus)currentReachabilityStatus;
+- (NetworkStatus)currentReachabilityStatus;
 
 /** WWAN可能可用，但在建立连接之前不会处于活动状态。 WiFi可能需要VPN on Demand连接。*/
 - (BOOL)connectionRequired;
 /**获取网络状态 2G/3G/4G/wifi*/
 +(NSString *)getNetconnType;
 
-#pragma ------------------------------------------各种方法使用------------------------------------------
+#pragma mark------------------------------------------各种方法使用------------------------------------------
 
-#pragma ------------------------------------------国际化设置---------------------------------------
+#pragma mark------------------------------------------国际化设置---------------------------------------
 
 +(instancetype)shareInstance;
 
-/***初始化多语言功能*/
+/**初始化多语言功能*/
 - (void)initLanguage;
 
-/***当前语言*/
+/**当前语言*/
 - (NSString *)currentLanguage;
 
 /***设置要转换的语言*/
@@ -89,19 +97,10 @@ typedef enum : NSInteger {
 
 /***设置为系统语言*/
 - (void)systemLanguage;
+/**将视图添加最上层的--Window--*/
+- (UIWindow*)lastWindow;
 
-#pragma ****************************************字符串方法***************************************
-/***  NSDictionary或NSArray转换为NSString*/
-+(NSString *)toJSONString:(id)theData;
-
-/***  //获取某个时间字符串 formart时间戳格式("yyyy-MM-dd HH-mm-ss")*/
-+(NSString *)dateStringWithDate:(NSDate *)date formart:(NSString *)formart;
-
-/***  //时间戳转化为NSDate formart时间戳格式("yyyy-MM-dd HH-mm-ss")*/
-+(NSDate *)dateWithNSString:(NSString*)string formart:(NSString *)formart;
-
-/***  根据日期计算N个月前的日期*/
-+(NSDate *)dateOfPreviousMonth:(NSInteger)previousMonthCount WithDate:(NSDate *)fromDate;
+#pragma mark****************************************字符串方法***************************************
 
 /***  获取长度为stringLength的随机字符串, 随机数字字符混合类型字符串函数*/
 +(NSString *)getRandomString:(NSInteger)stringLength;
@@ -120,15 +119,6 @@ typedef enum : NSInteger {
 
 /***  替换掉Json字符串中的换行符*/
 +(NSString *)ReplacingNewLineAndWhitespaceCharactersFromJson:(NSString *)jsonStr;
-
-/*** 直接调用这个方法即可签名成功*/
-+ (NSString *)serializeURL:(NSString *)baseURL Token:(NSString *)token params:(NSDictionary *)params;
-
-/***  需要给字符串加密排序*/
-+(NSString *)HTTPBodyWithParameters:(NSDictionary *)parameters Token:(NSString *)token;
-
-/***  返回一个请求头*/
-+(NSString *)parmereaddWithDict:(NSDictionary *)dict Token:(NSString *)token;
 
 /***  把多个json字符串转为一个json字符串*/
 +(NSString *)objArrayToJSON:(NSArray *)array;
@@ -207,7 +197,8 @@ typedef enum : NSInteger {
 
 /***  针对蜂窝网络判断是3G或者4G*/
 +(NSString *)getNetType;
-
+/**获取营运商*/
++(SSOperatorsType)getOperatorsType;
 /***  获取设备IDFV*/
 +(NSString *)getDeviceIDFV;
 
@@ -279,16 +270,8 @@ typedef enum : NSInteger {
 
 /*** 获取当前IP地址*/
 +(nullable NSString*)getCurrentWifiIP;
-/**
- *  拼接http://或者https://
- */
-+ (NSString *)getCompleteWebsite:(NSString *)urlStr;
-/**
- * 根据长度返回字符串
- */
-+ (NSString *)getStringWithRange:(NSRange)range;
 
-#pragma ****************************************判断方法****************************************
+#pragma mark****************************************判断方法****************************************
 /***  判断字符串是否是纯数字*/
 +(BOOL)isPureNumber:(NSString *)string;
 
@@ -412,7 +395,9 @@ typedef enum : NSInteger {
  * 识别整体字符串里面是否包含指定字符串  YES
  */
 +(BOOL)judgmentstring:(NSString *)string OfString:(NSString *)ofString;
-#pragma ****************************************没有返回方法****************************************
+/**是否开插sim卡*/
++ (BOOL)simCardInseerted;
+#pragma mark****************************************没有返回方法****************************************
 
 #pragma  mark - NSUserDefaults存取操作
 /***  存储当前BOOL*/
@@ -524,15 +509,12 @@ typedef enum : NSInteger {
 /***  截取控制器所生产图片*/
 + (void)screenSnapshot:(UIView *)snapshotView finishBlock:(void(^)(UIImage *snapShotImage))finishBloc;
 
-#pragma ****************************************其他方法****************************************
+#pragma mark****************************************其他方法****************************************
 /***  过滤数组中相等的数据*/
 +(NSArray *)filterSameObject:(NSArray *)array;
 
 /***  获取保存好的数组数据以  data.plist*/
 +(NSArray *)readsenderArraydata_plist:(NSString *)plistname;
-
-/***  新建UICollectionViewFlowLayout容器*/
-+(UICollectionViewFlowLayout *)setUICollectionViewFlowLayoutWidths:(float)width High:(float)high minHspacing:(float)minhs minVspacing:(float)minvs UiedgeUp:(float)up Uiedgeleft:(float)left Uiedgebottom:(float)bottom Uiedgeright:(float)right Scdirection:(BOOL) direction;
 
 /***  获取某个view在屏幕上的frame*/
 +(CGRect)rectFromSunView:(UIView *)view;
@@ -541,7 +523,7 @@ typedef enum : NSInteger {
 +(float)readCacheSize;
 
 /*** 温度单位转换方法*/
-+ (CGFloat)temperatureUnitExchangeValue:(CGFloat)value changeTo:(TFY_Temperature)unit;
++ (CGFloat)temperatureUnitExchangeValue:(CGFloat)value changeTo:(Temperature)unit;
 /**
  *  横屏截图长度 --- 获取主图片数据所返回的总图片长度 vertical 横屏 1 竖屏 0
  */

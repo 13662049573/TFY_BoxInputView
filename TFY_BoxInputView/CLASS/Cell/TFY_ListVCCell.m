@@ -9,9 +9,9 @@
 #import "TFY_ListVCCell.h"
 
 @interface TFY_ListVCCell ()
-TFY_CATEGORY_STRONG_PROPERTY UIView *lineView;
-TFY_CATEGORY_STRONG_PROPERTY UIImageView *imageViews;
-TFY_CATEGORY_STRONG_PROPERTY UILabel *nameLabel;
+TFY_PROPERTY_STRONG UIView *lineView;
+TFY_PROPERTY_STRONG UIImageView *imageViews;
+TFY_PROPERTY_STRONG UILabel *nameLabel;
 @end
 
 @implementation TFY_ListVCCell
@@ -24,10 +24,10 @@ TFY_CATEGORY_STRONG_PROPERTY UILabel *nameLabel;
         self.nameLabel.tfy_LeftSpace(30).tfy_TopSpace(10).tfy_RightSpace(30).tfy_Height(20);
         
         [self.contentView addSubview:self.lineView];
-        self.lineView.tfy_LeftSpaceEqualView(self.nameLabel).tfy_TopSpaceToView(0, self.nameLabel).tfy_size(TFY_Width_W/2, 2);
+        self.lineView.tfy_LeftSpaceEqualView(self.nameLabel).tfy_TopSpaceToView(0, self.nameLabel).tfy_size(TFY_Width_W()/2, 2);
         
         [self.contentView addSubview:self.imageViews];
-        self.imageViews.tfy_Center(0, 0).tfy_size(TFY_Width_W-60, 90);
+        self.imageViews.tfy_Center(0, 0).tfy_size(TFY_Width_W()-60, 90);
         
     }
     return self;

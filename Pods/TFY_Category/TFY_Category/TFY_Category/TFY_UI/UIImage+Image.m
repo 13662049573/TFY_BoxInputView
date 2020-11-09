@@ -1055,12 +1055,12 @@ void TFY_ProviderReleaseData(void * info, const void * data, size_t size) {
  *  拼接快照 imagesArr 快照的数组
  */
 #pragma mark 拼接快照
-+ (UIImage *)getImageFromImagesArray:(NSArray *)imagesArr
++ (UIImage *)tfy_getImageFromImagesArray:(NSArray *)imagesArr
 {
 
     UIImage *image;
     @autoreleasepool{
-        CGSize imageTotalSize = [self getImageTotalSizeFromImagesArray:imagesArr];
+        CGSize imageTotalSize = [self tfy_getImageTotalSizeFromImagesArray:imagesArr];
         UIGraphicsBeginImageContextWithOptions(imageTotalSize, NO, [UIScreen mainScreen].scale);
         
         //拼接图片
@@ -1078,7 +1078,7 @@ void TFY_ProviderReleaseData(void * info, const void * data, size_t size) {
 }
 
 #pragma mark 获取全部图片拼接后size
-+ (CGSize)getImageTotalSizeFromImagesArray:(NSArray *)imagesArr
++ (CGSize)tfy_getImageTotalSizeFromImagesArray:(NSArray *)imagesArr
 {
     CGSize totalSize = CGSizeZero;
     for (UIImage *image in imagesArr) {
